@@ -279,7 +279,7 @@ export function FilterPanel({ filters, onFilterChange, onApply, isMobile }: Filt
       </div>
 
       {/* 가격 필터 */}
-      <div className="p-4">
+      <div className="p-4 overflow-hidden">
         <button
           className="w-full flex justify-between items-center text-lg font-medium dark:text-white"
           onClick={() => toggleSection('price')}
@@ -290,34 +290,38 @@ export function FilterPanel({ filters, onFilterChange, onApply, isMobile }: Filt
         
         {expandedSections.price && (
           <div className="mt-4 space-y-4">
-            <div className="flex items-center space-x-2">
-              <input
-                type="number"
-                placeholder="최소"
-                value={localFilters.minPrice || ''}
-                onChange={(e) => {
-                  const value = e.target.value ? Number(e.target.value) : undefined;
-                  setLocalFilters(prev => ({ ...prev, minPrice: value }));
-                  if (!isMobile) {
-                    onFilterChange({ ...localFilters, minPrice: value });
-                  }
-                }}
-                className="flex-1 px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-              <span className="text-gray-500 dark:text-gray-400">~</span>
-              <input
-                type="number"
-                placeholder="최대"
-                value={localFilters.maxPrice || ''}
-                onChange={(e) => {
-                  const value = e.target.value ? Number(e.target.value) : undefined;
-                  setLocalFilters(prev => ({ ...prev, maxPrice: value }));
-                  if (!isMobile) {
-                    onFilterChange({ ...localFilters, maxPrice: value });
-                  }
-                }}
-                className="flex-1 px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
+            <div className="flex items-center gap-2">
+              <div className="w-[45%]">
+                <input
+                  type="number"
+                  placeholder="최소"
+                  value={localFilters.minPrice || ''}
+                  onChange={(e) => {
+                    const value = e.target.value ? Number(e.target.value) : undefined;
+                    setLocalFilters(prev => ({ ...prev, minPrice: value }));
+                    if (!isMobile) {
+                      onFilterChange({ ...localFilters, minPrice: value });
+                    }
+                  }}
+                  className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              </div>
+              <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">~</span>
+              <div className="w-[45%]">
+                <input
+                  type="number"
+                  placeholder="최대"
+                  value={localFilters.maxPrice || ''}
+                  onChange={(e) => {
+                    const value = e.target.value ? Number(e.target.value) : undefined;
+                    setLocalFilters(prev => ({ ...prev, maxPrice: value }));
+                    if (!isMobile) {
+                      onFilterChange({ ...localFilters, maxPrice: value });
+                    }
+                  }}
+                  className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              </div>
             </div>
             
             <Link
