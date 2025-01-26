@@ -1,24 +1,28 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Header } from './components/Header';
-import { ChatButton } from './components/ChatButton';
-import { HomePage } from './pages/HomePage';
-import { InstrumentDetailPage } from './pages/InstrumentDetailPage';
-import { SignupPage } from './pages/SignupPage';
-import { StoresPage } from './pages/StoresPage';
-import { StoreDetailPage } from './pages/StoreDetailPage';
-import { RegisterInstrumentPage } from './pages/RegisterInstrumentPage';
-import { RegisterStorePage } from './pages/RegisterStorePage';
-import { MarketplacePage } from './pages/MarketplacePage';
-import { RegisterMarketItemPage } from './pages/RegisterMarketItemPage';
-import { FavoritesPage } from './pages/FavoritesPage';
-import { RecentViewsPage } from './pages/RecentViewsPage';
-import { PurchasePage } from './pages/PurchasePage';
-import { AdminPage } from './pages/AdminPage';
-import { PriceComparisonPage } from './pages/PriceComparisonPage';
-import { UserManagementPage } from './pages/UserManagementPage';
-import { AdminCategoryPage } from './pages/AdminCategoryPage';
-import { ProfilePage } from './pages/ProfilePage';
+import { ChatButton } from '@/domain/message/components/ChatButton';
+
+// Instrument related pages
+import { HomePage } from '@/domain/instrument/pages/HomePage';
+import { InstrumentDetailPage } from '@/domain/instrument/pages/InstrumentDetailPage';
+import { StoresPage } from '@/domain/instrument/pages/StoresPage';
+import { StoreDetailPage } from '@/domain/instrument/pages/StoreDetailPage';
+import { RegisterInstrumentPage } from '@/domain/instrument/pages/RegisterInstrumentPage';
+import { RegisterStorePage } from '@/domain/instrument/pages/RegisterStorePage';
+import { MarketplacePage } from '@/domain/instrument/pages/MarketplacePage';
+import { RegisterMarketItemPage } from '@/domain/instrument/pages/RegisterMarketItemPage';
+import { PriceComparisonPage } from '@/domain/instrument/pages/PriceComparisonPage';
+
+// User related pages
+import { SignupPage } from '@/domain/user/auth/pages/SignupPage';
+import { ProfilePage } from '@/domain/user/profile/pages/ProfilePage';
+import { FavoritesPage } from '@/domain/FavoritesPage';
+import { RecentViewsPage } from '@/domain/RecentViewsPage';
+import { PurchasePage } from '@/domain/PurchasePage';
+import { AdminPage } from '@/domain/AdminPage';
+import { UserManagementPage } from '@/domain/UserManagementPage';
+import { AdminCategoryPage } from '@/domain/AdminCategoryPage';
+import { Header } from './common/Header/Header';
+
 
 function App() {
   return (

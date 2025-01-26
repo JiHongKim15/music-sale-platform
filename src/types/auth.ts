@@ -1,4 +1,5 @@
 export interface User {
+  is_seller: boolean;
   id: string;
   name: string;
   email: string;

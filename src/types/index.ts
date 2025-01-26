@@ -21,6 +21,7 @@ export interface Store {
   id: string;
   name: string;
   location: string;
+  rating?: number;
   region: Region;
   address: string;
   phone: string;
@@ -72,4 +73,14 @@ export interface InstrumentCategory {
     name: string;
     items: string[];
   }[];
+}
+
+export interface Notification {
+  id: string;
+  instrumentId: string;
+  instrumentName: string;
+  message: string;
+  createdAt: string;
+  read: boolean;
+  type: 'price_change' | 'sold' | 'new_item';
 }
