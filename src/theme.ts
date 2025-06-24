@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { useRecoilValue } from 'recoil';
-import { darkModeState } from '@/context/atoms';
+import { darkModeState } from '@/stores/atoms';
 
 export function useTheme() {
   const isDarkMode = useRecoilValue(darkModeState);
