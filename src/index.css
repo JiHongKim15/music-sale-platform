@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Kalam:wght@300;400;700&family=Shadows+Into+Light&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,4 +17,266 @@
 
 .animate-slideUp {
   animation: slideUp 0.3s ease-out forwards;
+}
+
+.font-sketch {
+  font-family: 'Caveat', 'Shadows Into Light', cursive;
+}
+.sketch-border {
+  border: 2.5px solid #222;
+  border-radius: 1.5rem;
+  box-shadow: 2px 4px 0 #e0e0e0, 0 0 0 4px #fff inset;
+}
+.bg-sketch {
+  background: url('/assets/sketch-bg.svg') repeat;
+}
+.sketch-shadow {
+  box-shadow: 0 4px 16px 0 rgba(80,80,80,0.08), 2px 4px 0 #e0e0e0;
+}
+.sketch-rotate {
+  transform: rotate(-2deg);
+}
+.sketch-rotate2 {
+  transform: rotate(1.5deg);
+}
+.sketch-underline {
+  border-bottom: 2px dashed #b4b4b4;
+}
+.sketch-btn {
+  border-radius: 1.5rem;
+  border: 2px solid #222;
+  background: #fffbe7;
+  font-family: 'Caveat', 'Shadows Into Light', cursive;
+  font-size: 1.1rem;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 1px 2px 0 #e0e0e0;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.sketch-btn:hover {
+  background: #fff3b0;
+  box-shadow: 2px 4px 0 #e0e0e0;
+  transform: scale(1.04) rotate(-1deg);
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+.bg-music-sketch {
+  background: linear-gradient(135deg, #fdf6e3 0%, #e0e7ff 50%, #f0fdf4 100%), url('/assets/music-staff.svg') repeat, url('/assets/music-notes.svg') repeat;
+  background-size: 100% 100%, 400px, 200px;
+  background-blend-mode: lighten, normal;
+  min-height: 100vh;
+}
+.header-music {
+  background: linear-gradient(90deg, #fdf6e3 0%, #e0e7ff 100%);
+  box-shadow: 0 4px 24px 0 rgba(124,58,237,0.08);
+  border-bottom: 2.5px dashed #b4b4b4;
+  border-radius: 0 0 2rem 2rem;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.header-logo-music {
+  font-family: 'Caveat', 'Shadows Into Light', cursive;
+  font-size: 2.2rem;
+  color: #7c3aed;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.header-icon-music {
+  font-size: 2.2rem;
+  margin-right: 0.5rem;
+}
+.sketch-card-music {
+  border: 2.5px solid #222;
+  border-radius: 2rem;
+  background: linear-gradient(120deg, #fffbe7 60%, #e0e7ff 100%);
+  box-shadow: 0 8px 32px 0 rgba(124,58,237,0.08), 2px 4px 0 #e0e0e0;
+  margin-bottom: 2.5rem;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.sketch-card-music:hover {
+  box-shadow: 0 12px 40px 0 #a5b4fc, 2px 4px 0 #e0e0e0;
+  transform: scale(1.03) rotate(-1.5deg);
+  animation: wiggle 0.18s ease-in-out 1;
+}
+.sketch-btn-music {
+  border-radius: 1.5rem;
+  border: 2px solid #222;
+  background: linear-gradient(90deg, #fffbe7 60%, #e0e7ff 100%);
+  font-family: 'Caveat', 'Shadows Into Light', cursive;
+  font-size: 1.2rem;
+  padding: 0.7rem 2rem;
+  box-shadow: 1px 2px 0 #e0e0e0;
+  color: #7c3aed;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.sketch-btn-music:hover {
+  background: #f0fdf4;
+  box-shadow: 2px 4px 0 #e0e0e0;
+  transform: scale(1.06) rotate(-2deg);
+}
+.sketch-rotate {
+  transform: rotate(-2deg);
+}
+.sketch-rotate2 {
+  transform: rotate(1.5deg);
+}
+.sketch-wiggle {
+  animation: wiggle 0.18s ease-in-out 1;
+}
+@keyframes wiggle {
+  0% { transform: rotate(-2deg); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(-1deg); }
+  75% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* 귀여운 스케치 애니메이션들 */
+@keyframes bounce-cute {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(2deg); }
+}
+
+@keyframes shake-cute {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-2px) rotate(-1deg); }
+  75% { transform: translateX(2px) rotate(1deg); }
+}
+
+@keyframes float-cute {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+@keyframes draw-border {
+  0% { 
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% { 
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+/* 귀여운 스케치 클래스들 */
+.font-handwriting {
+  font-family: 'Kalam', 'Caveat', cursive;
+  font-weight: 400;
+}
+
+.font-handwriting-bold {
+  font-family: 'Kalam', 'Caveat', cursive;
+  font-weight: 700;
+}
+
+.animate-bounce-cute {
+  animation: bounce-cute 2s ease-in-out infinite;
+}
+
+.animate-shake-cute {
+  animation: shake-cute 0.5s ease-in-out;
+}
+
+.animate-float-cute {
+  animation: float-cute 3s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.sketch-dashed-border {
+  border-style: dashed;
+  border-width: 2px;
+  animation: draw-border 2s ease-in-out;
+}
+
+.hover-wiggle:hover {
+  animation: wiggle 0.3s ease-in-out;
+}
+
+.hover-bounce-cute:hover {
+  animation: bounce-cute 0.6s ease-in-out;
+}
+
+.hover-shake-cute:hover {
+  animation: shake-cute 0.4s ease-in-out;
 }

@@ -48,7 +48,9 @@ export const mockInstruments: Instrument[] = [
       }
     },
     viewCount: 245,
-    currentViewers: 3
+    currentViewers: 3,
+    rating: 4.8,
+    createdAt: "2024-01-10T10:30:00Z"
   },
   {
     id: "2",
@@ -88,7 +90,9 @@ export const mockInstruments: Instrument[] = [
       }
     },
     viewCount: 189,
-    currentViewers: 2
+    currentViewers: 2,
+    rating: 4.6,
+    createdAt: "2024-01-08T14:20:00Z"
   },
   {
     id: "3",
@@ -117,7 +121,9 @@ export const mockInstruments: Instrument[] = [
       estimatedDays: 7
     },
     viewCount: 156,
-    currentViewers: 1
+    currentViewers: 1,
+    rating: 4.5,
+    createdAt: "2024-01-12T09:15:00Z"
   },
   {
     id: "4",
@@ -146,7 +152,9 @@ export const mockInstruments: Instrument[] = [
       estimatedDays: 3
     },
     viewCount: 98,
-    currentViewers: 4
+    currentViewers: 4,
+    rating: 4.3,
+    createdAt: "2024-01-05T16:45:00Z"
   },
   {
     id: "5",
@@ -175,6 +183,8 @@ export const mockInstruments: Instrument[] = [
       estimatedDays: 2
     },
     viewCount: 234,
-    currentViewers: 2
+    currentViewers: 2,
+    rating: 4.9,
+    createdAt: "2024-01-13T11:30:00Z"
   }
 ];

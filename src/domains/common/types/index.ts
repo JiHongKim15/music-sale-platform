@@ -53,6 +53,8 @@ export interface Instrument {
   store?: Store;
   viewCount?: number;
   currentViewers?: number;
+  rating?: number;
+  createdAt?: string;
 }
 
 export interface SearchFilters {

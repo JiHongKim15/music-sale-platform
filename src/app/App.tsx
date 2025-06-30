@@ -1,5 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ChatButton } from '@/domains/message/components/ChatButton';
+import { BottomNavBar } from '@/components/atoms/BottomNavBar';
 
 // Instrument related pages
 import { HomePage } from '@/domains/instrument/components/HomePage';
@@ -23,33 +24,72 @@ import { UserManagementPage } from '@/domains/admin/components/UserManagementPag
 import { AdminCategoryPage } from '@/domains/admin/components/AdminCategoryPage';
 import { Header } from '@/components/organisms/Header/Header';
 
+function AppContent() {
+  const location = useLocation();
+  
+  // 자체 헤더가 있는 페이지들 (Header 컴포넌트 숨김)
+  const pagesWithOwnHeader = [
+    '/',
+    '/instrument',
+    '/stores',
+    '/marketplace',
+    '/signup'
+  ];
+  
+  const shouldShowHeader = !pagesWithOwnHeader.some(path => 
+    location.pathname === path || location.pathname.startsWith(path)
+  );
+  
+  // 하단 네비게이션을 숨길 페이지들
+  const hideBottomNav = [
+    '/signup',
+    '/admin',
+    '/admin/users', 
+    '/admin/categories',
+    '/register/instrument',
+    '/register/store',
+    '/marketplace/register'
+  ].some(path => location.pathname.startsWith(path));
+
+  return (
+    <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {shouldShowHeader && <Header />}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/instrument/:id" element={<InstrumentDetailPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/stores" element={<StoresPage />} />
+        <Route path="/store/:id" element={<StoreDetailPage />} />
+        <Route path="/register/instrument" element={<RegisterInstrumentPage />} />
+        <Route path="/register/store" element={<RegisterStorePage />} />
+        <Route path="/marketplace" element={<MarketplacePage />} />
+        <Route path="/marketplace/register" element={<RegisterMarketItemPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/recent-views" element={<RecentViewsPage />} />
+        <Route path="/purchase/:id" element={<PurchasePage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/users" element={<UserManagementPage />} />
+        <Route path="/admin/categories" element={<AdminCategoryPage />} />
+        <Route path="/price-comparison" element={<PriceComparisonPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
+      
+      {/* 채팅 버튼 */}
+      <ChatButton />
+      
+      {/* 하단 네비게이션 */}
+      {!hideBottomNav && <BottomNavBar />}
+      
+      {/* 하단 네비게이션 공간 확보 */}
+      {!hideBottomNav && <div className="h-20" />}
+    </div>
+  );
+}
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-        <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/instrument/:id" element={<InstrumentDetailPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/stores" element={<StoresPage />} />
-          <Route path="/store/:id" element={<StoreDetailPage />} />
-          <Route path="/register/instrument" element={<RegisterInstrumentPage />} />
-          <Route path="/register/store" element={<RegisterStorePage />} />
-          <Route path="/marketplace" element={<MarketplacePage />} />
-          <Route path="/marketplace/register" element={<RegisterMarketItemPage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
-          <Route path="/recent-views" element={<RecentViewsPage />} />
-          <Route path="/purchase/:id" element={<PurchasePage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/admin/users" element={<UserManagementPage />} />
-          <Route path="/admin/categories" element={<AdminCategoryPage />} />
-          <Route path="/price-comparison" element={<PriceComparisonPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-        <ChatButton />
-      </div>
+      <AppContent />
     </Router>
   );
 }
