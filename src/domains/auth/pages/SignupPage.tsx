@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Check, X, Phone, Mail, User, Lock, ArrowLeft, Smartphone } from 'lucide-react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { Eye, EyeOff, Check, X, Phone, Mail, User, Lock, ArrowLeft, Home } from 'lucide-react';
 import { AuthApiService, UserRole, CreateUserByEmailRequest } from '../services/authApi';
+import { 
+  PrimaryButton 
+} from '@/components/atoms';
+import { AuthButtons } from '@/domains/auth/components/AuthButtons';
+import { CommonHeader } from '@/components/organisms/Header/CommonHeader';
 
 interface FormData {
   email: string;
@@ -13,6 +18,9 @@ interface FormData {
   role: UserRole;
   agreeTerms: boolean;
   agreePrivacy: boolean;
+  storeName?: string;
+  storeAddress?: string;
+  storePhone?: string;
 }
 
 interface ValidationState {
@@ -32,8 +40,10 @@ interface PhoneVerification {
   isVerifying: boolean;
 }
 
-export function SignupPage() {
+export const SignupPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isSeller = searchParams.get('type') === 'seller';
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
@@ -65,8 +75,15 @@ export function SignupPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 핸드폰인증, 3: 완료
+
+  // isSeller 값이 바뀔 때(매장 판매자 등록 클릭 시) 애니메이션 트리거
+  const [sellerTransition, setSellerTransition] = useState(false);
+  useEffect(() => {
+    setSellerTransition(true);
+    const timer = setTimeout(() => setSellerTransition(false), 500);
+    return () => clearTimeout(timer);
+  }, [isSeller]);
 
   // 타이머 효과
   useEffect(() => {
@@ -360,8 +377,6 @@ export function SignupPage() {
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
       const request: CreateUserByEmailRequest = {
         email: formData.email,
@@ -377,8 +392,6 @@ export function SignupPage() {
       navigate('/');
     } catch (error) {
       alert('회원가입에 실패했습니다.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -398,219 +411,50 @@ export function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <div className="max-w-md mx-auto">
-        {/* 헤더 */}
-        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm px-6 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-2 text-gray-600 hover:text-orange-600 transition-all duration-300 hover:scale-110 active:scale-95 rounded-full hover:bg-orange-50"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold text-gray-900">회원가입</h1>
-              <div className="flex items-center mt-2">
-                <div className={`w-8 h-1 rounded-full transition-all duration-300 ${currentStep >= 1 ? 'bg-orange-500' : 'bg-gray-200'}`} />
-                <div className={`w-8 h-1 rounded-full ml-1 transition-all duration-300 ${currentStep >= 2 ? 'bg-orange-500' : 'bg-gray-200'}`} />
-                <div className={`w-8 h-1 rounded-full ml-1 transition-all duration-300 ${currentStep >= 3 ? 'bg-orange-500' : 'bg-gray-200'}`} />
-              </div>
+    <div className="min-h-screen bg-gray-50">
+      <CommonHeader
+        title="회원가입"
+        showBackButton
+        showLogo
+        showUserMenu={false}
+      />
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-8">
+        <div className={`w-full max-w-md bg-white rounded-2xl shadow-lg p-8 transition-all duration-500 ${sellerTransition ? 'animate-slide-in' : ''}`}>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">회원가입</h2>
+          <div className="flex justify-center mb-6">
+            {isSeller ? (
+              <button
+                onClick={() => navigate('/signup')}
+                className="text-gray-500 font-semibold hover:underline px-3 py-1 rounded-full transition-colors duration-200 bg-gray-50"
+              >
+                구매자 회원가입으로 돌아가기
+              </button>
+            ) : (
+              <Link
+                to="/signup?type=seller"
+                className={`text-orange-600 font-semibold hover:underline px-3 py-1 rounded-full transition-colors duration-200 ${isSeller ? 'bg-orange-50' : ''}`}
+              >
+                매장 판매자 등록
+              </Link>
+            )}
+          </div>
+          <AuthButtons
+            onGoogle={() => alert('구글 회원가입')}
+            onNaver={() => alert('네이버 회원가입')}
+            onKakao={() => alert('카카오 회원가입')}
+          />
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-white px-2 text-gray-400">또는 휴대폰 번호로 가입</span>
             </div>
           </div>
-        </div>
-
-        {/* 메인 콘텐츠 */}
-        <div className="px-6 py-8">
           {currentStep === 1 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
-              {/* 역할 선택 */}
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-3">가입 유형</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, role: UserRole.BUYER }))}
-                    className={`p-4 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 ${
-                      formData.role === UserRole.BUYER
-                        ? 'bg-orange-500 text-white shadow-lg'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <User className="w-5 h-5 mx-auto mb-2" />
-                    <span className="text-sm font-medium">구매자</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, role: UserRole.SELLER }))}
-                    className={`p-4 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 ${
-                      formData.role === UserRole.SELLER
-                        ? 'bg-orange-500 text-white shadow-lg'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <Smartphone className="w-5 h-5 mx-auto mb-2" />
-                    <span className="text-sm font-medium">판매자</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* 이메일 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">이메일</label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => {
-                      setFormData(prev => ({ ...prev, email: e.target.value }));
-                      validateEmail(e.target.value);
-                    }}
-                    className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
-                    placeholder="이메일을 입력하세요"
-                  />
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  {validation.email.isChecking && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-orange-300 border-t-orange-600 rounded-full animate-spin" />
-                  )}
-                  {!validation.email.isChecking && validation.email.message && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      {validation.email.isValid ? (
-                        <Check className="w-4 h-4 text-green-500" />
-                      ) : (
-                        <X className="w-4 h-4 text-red-500" />
-                      )}
-                    </div>
-                  )}
-                </div>
-                {validation.email.message && (
-                  <p className={`text-xs mt-1 ${validation.email.isValid ? 'text-green-600' : 'text-red-600'}`}>
-                    {validation.email.message}
-                  </p>
-                )}
-              </div>
-
-              {/* 비밀번호 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">비밀번호</label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={(e) => {
-                      setFormData(prev => ({ ...prev, password: e.target.value }));
-                      validatePassword(e.target.value);
-                    }}
-                    className="w-full px-4 py-3 pl-10 pr-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
-                    placeholder="비밀번호를 입력하세요"
-                  />
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                {validation.password.message && (
-                  <p className={`text-xs mt-1 ${validation.password.isValid ? 'text-green-600' : 'text-red-600'}`}>
-                    {validation.password.message}
-                  </p>
-                )}
-              </div>
-
-              {/* 비밀번호 확인 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">비밀번호 확인</label>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={formData.confirmPassword}
-                    onChange={(e) => {
-                      setFormData(prev => ({ ...prev, confirmPassword: e.target.value }));
-                      validateConfirmPassword(e.target.value);
-                    }}
-                    className="w-full px-4 py-3 pl-10 pr-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
-                    placeholder="비밀번호를 다시 입력하세요"
-                  />
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                {validation.confirmPassword.message && (
-                  <p className={`text-xs mt-1 ${validation.confirmPassword.isValid ? 'text-green-600' : 'text-red-600'}`}>
-                    {validation.confirmPassword.message}
-                  </p>
-                )}
-              </div>
-
-              {/* 이름 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">이름</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => {
-                      setFormData(prev => ({ ...prev, name: e.target.value }));
-                      validateName(e.target.value);
-                    }}
-                    className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
-                    placeholder="이름을 입력하세요"
-                  />
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                </div>
-                {validation.name.message && (
-                  <p className={`text-xs mt-1 ${validation.name.isValid ? 'text-green-600' : 'text-red-600'}`}>
-                    {validation.name.message}
-                  </p>
-                )}
-              </div>
-
-              {/* 닉네임 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">닉네임</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={formData.nickname}
-                    onChange={(e) => {
-                      setFormData(prev => ({ ...prev, nickname: e.target.value }));
-                      validateNickname(e.target.value);
-                    }}
-                    className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
-                    placeholder="닉네임을 입력하세요"
-                  />
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  {validation.nickname.isChecking && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-orange-300 border-t-orange-600 rounded-full animate-spin" />
-                  )}
-                  {!validation.nickname.isChecking && validation.nickname.message && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      {validation.nickname.isValid ? (
-                        <Check className="w-4 h-4 text-green-500" />
-                      ) : (
-                        <X className="w-4 h-4 text-red-500" />
-                      )}
-                    </div>
-                  )}
-                </div>
-                {validation.nickname.message && (
-                  <p className={`text-xs mt-1 ${validation.nickname.isValid ? 'text-green-600' : 'text-red-600'}`}>
-                    {validation.nickname.message}
-                  </p>
-                )}
-              </div>
-
-              {/* 핸드폰 번호 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">핸드폰 번호</label>
+                <label className="block text-sm font-medium text-gray-900 mb-2">휴대폰 번호</label>
                 <div className="relative">
                   <input
                     type="tel"
@@ -642,146 +486,195 @@ export function SignupPage() {
                   </p>
                 )}
               </div>
-
-              {/* 다음 단계 버튼 */}
-              <button
-                onClick={() => setCurrentStep(2)}
-                disabled={!canProceedToStep2()}
-                className={`w-full py-4 rounded-2xl font-medium transition-all duration-300 ${
-                  canProceedToStep2()
-                    ? 'bg-orange-500 text-white hover:bg-orange-600 hover:scale-105 active:scale-95 hover:shadow-lg'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                }`}
-              >
-                핸드폰 인증하기
-              </button>
-            </div>
-          )}
-
-          {currentStep === 2 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-8 h-8 text-orange-600" />
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">비밀번호</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, password: e.target.value }));
+                      validatePassword(e.target.value);
+                    }}
+                    className="w-full px-4 py-3 pl-10 pr-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
+                    placeholder="비밀번호를 입력하세요"
+                  />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-2">핸드폰 인증</h2>
-                <p className="text-gray-600">본인 확인을 위해 핸드폰 인증을 진행합니다</p>
+                {validation.password.message && (
+                  <p className={`text-xs mt-1 ${validation.password.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                    {validation.password.message}
+                  </p>
+                )}
               </div>
-
-              <div className="bg-gray-50 rounded-2xl p-4">
-                <p className="text-sm text-gray-700">
-                  <span className="font-medium">핸드폰 번호:</span> {formData.phoneNumber}
-                </p>
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">비밀번호 확인</label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={formData.confirmPassword}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, confirmPassword: e.target.value }));
+                      validateConfirmPassword(e.target.value);
+                    }}
+                    className="w-full px-4 py-3 pl-10 pr-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
+                    placeholder="비밀번호를 다시 입력하세요"
+                  />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {validation.confirmPassword.message && (
+                  <p className={`text-xs mt-1 ${validation.confirmPassword.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                    {validation.confirmPassword.message}
+                  </p>
+                )}
               </div>
-
-              {!phoneVerification.isRequested ? (
-                <button
-                  onClick={requestPhoneVerification}
-                  className="w-full py-4 bg-orange-500 text-white rounded-2xl font-medium hover:bg-orange-600 transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg"
-                >
-                  인증번호 발송
-                </button>
-              ) : (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">인증번호</label>
-                    <input
-                      type="text"
-                      value={phoneVerification.code}
-                      onChange={(e) => setPhoneVerification(prev => ({ ...prev, code: e.target.value }))}
-                      className="w-full px-4 py-3 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
-                      placeholder="인증번호 6자리를 입력하세요"
-                      maxLength={6}
-                    />
-                    {phoneVerification.timeLeft > 0 && (
-                      <p className="text-xs text-orange-600 mt-1">
-                        남은 시간: {formatTime(phoneVerification.timeLeft)}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      onClick={requestPhoneVerification}
-                      disabled={phoneVerification.timeLeft > 0}
-                      className={`py-3 rounded-2xl font-medium transition-all duration-300 ${
-                        phoneVerification.timeLeft > 0
-                          ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105 active:scale-95'
-                      }`}
-                    >
-                      재발송
-                    </button>
-                    <button
-                      onClick={confirmPhoneVerification}
-                      disabled={phoneVerification.isVerifying || !phoneVerification.code}
-                      className={`py-3 rounded-2xl font-medium transition-all duration-300 ${
-                        phoneVerification.isVerifying || !phoneVerification.code
-                          ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                          : 'bg-orange-500 text-white hover:bg-orange-600 hover:scale-105 active:scale-95'
-                      }`}
-                    >
-                      {phoneVerification.isVerifying ? '확인 중...' : '확인'}
-                    </button>
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">이름</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, name: e.target.value }));
+                      validateName(e.target.value);
+                    }}
+                    className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
+                    placeholder="이름을 입력하세요"
+                  />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                </div>
+                {validation.name.message && (
+                  <p className={`text-xs mt-1 ${validation.name.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                    {validation.name.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">이메일(선택)</label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, email: e.target.value }));
+                      validateEmail(e.target.value);
+                    }}
+                    className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
+                    placeholder="이메일을 입력하세요 (선택)"
+                  />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                </div>
+                {validation.email.message && (
+                  <p className={`text-xs mt-1 ${validation.email.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                    {validation.email.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">닉네임</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={formData.nickname}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, nickname: e.target.value }));
+                      validateNickname(e.target.value);
+                    }}
+                    className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
+                    placeholder="닉네임을 입력하세요"
+                  />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                </div>
+                {validation.nickname.message && (
+                  <p className={`text-xs mt-1 ${validation.nickname.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                    {validation.nickname.message}
+                  </p>
+                )}
+              </div>
+              {isSeller && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom duration-500">
+                  <div className="p-4 bg-orange-50 rounded-xl border border-orange-200">
+                    <h3 className="text-sm font-semibold text-orange-800 mb-3 flex items-center gap-2">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
+                      매장 정보
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={formData.storeName || ''}
+                          onChange={e => setFormData(prev => ({ ...prev, storeName: e.target.value }))}
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all duration-300"
+                          placeholder="매장명"
+                          required
+                        />
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          {formData.storeName && (
+                            <Check className="w-4 h-4 text-green-500 animate-in zoom-in duration-200" />
+                          )}
+                        </div>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={formData.storeAddress || ''}
+                          onChange={e => setFormData(prev => ({ ...prev, storeAddress: e.target.value }))}
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all duration-300"
+                          placeholder="매장 위치(주소)"
+                          required
+                        />
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          {formData.storeAddress && (
+                            <Check className="w-4 h-4 text-green-500 animate-in zoom-in duration-200" />
+                          )}
+                        </div>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={formData.storePhone || ''}
+                          onChange={e => setFormData(prev => ({ ...prev, storePhone: e.target.value }))}
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all duration-300"
+                          placeholder="매장 전화번호"
+                          required
+                        />
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          {formData.storePhone && (
+                            <Check className="w-4 h-4 text-green-500 animate-in zoom-in duration-200" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
-            </div>
-          )}
-
-          {currentStep === 3 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Check className="w-8 h-8 text-green-600" />
-                </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-2">인증 완료</h2>
-                <p className="text-gray-600">핸드폰 인증이 완료되었습니다</p>
-              </div>
-
-              {/* 약관 동의 */}
-              <div className="space-y-4">
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.agreeTerms}
-                    onChange={(e) => setFormData(prev => ({ ...prev, agreeTerms: e.target.checked }))}
-                    className="mt-1 w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">
-                    <span className="text-red-500">*</span> 이용약관에 동의합니다
-                  </span>
-                </label>
-
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.agreePrivacy}
-                    onChange={(e) => setFormData(prev => ({ ...prev, agreePrivacy: e.target.checked }))}
-                    className="mt-1 w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">
-                    <span className="text-red-500">*</span> 개인정보처리방침에 동의합니다
-                  </span>
-                </label>
-              </div>
-
-              {/* 회원가입 완료 버튼 */}
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting || !formData.agreeTerms || !formData.agreePrivacy}
-                className={`w-full py-4 rounded-2xl font-medium transition-all duration-300 ${
-                  isSubmitting || !formData.agreeTerms || !formData.agreePrivacy
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-orange-500 text-white hover:bg-orange-600 hover:scale-105 active:scale-95 hover:shadow-lg'
-                }`}
+              <PrimaryButton
+                size="xl"
+                shape="rounded"
+                onClick={() => setCurrentStep(2)}
+                disabled={!canProceedToStep2()}
+                className="w-full py-4 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               >
-                {isSubmitting ? '가입 중...' : '회원가입 완료'}
-              </button>
+                인증번호 받기
+              </PrimaryButton>
             </div>
           )}
         </div>
       </div>
     </div>
   );
-}
+};

@@ -23,6 +23,7 @@ import { AdminPage } from '@/domains/admin/components/AdminPage';
 import { UserManagementPage } from '@/domains/admin/components/UserManagementPage';
 import { AdminCategoryPage } from '@/domains/admin/components/AdminCategoryPage';
 import { Header } from '@/components/organisms/Header/Header';
+import LoginPage from '@/domains/auth/pages/LoginPage';
 
 function AppContent() {
   const location = useLocation();
@@ -58,6 +59,7 @@ function AppContent() {
         <Route path="/" element={<HomePage />} />
         <Route path="/instrument/:id" element={<InstrumentDetailPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/stores" element={<StoresPage />} />
         <Route path="/store/:id" element={<StoreDetailPage />} />
         <Route path="/register/instrument" element={<RegisterInstrumentPage />} />

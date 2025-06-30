@@ -6,6 +6,7 @@ import { StoreCard } from '../components/StoreCard';
 import { regions } from '@/domains/instrument/constants/regions';
 import { Pagination } from '@/components/atoms/Pagination';
 import { Search, MapPin, Store as StoreIcon } from 'lucide-react';
+import { CommonHeader } from '@/components/organisms/Header/CommonHeader';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -41,34 +42,16 @@ export function StoresPage() {
     return mockInstruments.filter(i => i.store?.id === storeId);
   };
 
-  const handleLogoClick = () => {
-    navigate('/');
-  };
-
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       <div className="max-w-7xl mx-auto">
-        {/* 헤더 - HomePage와 통일 */}
-        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm px-6 py-3">
-          <div className="flex items-center gap-6 h-16">
-            <button
-              onClick={handleLogoClick}
-              className="flex items-center gap-2 group transition-all duration-300 hover:scale-105"
-            >
-              <span className="text-2xl group-hover:rotate-12 transition-transform duration-300">🎸</span>
-              <span className="text-xl font-bold text-gray-800 group-hover:text-orange-600 transition-colors duration-300">뮤직마켓</span>
-            </button>
-            
-            <div className="flex-1" />
-            
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-orange-600 transition-all duration-300 hover:scale-105 rounded-full hover:bg-orange-50"
-            >
-              뒤로
-            </button>
-          </div>
-        </div>
+        {/* 공통 헤더 사용 */}
+        <CommonHeader
+          variant="back"
+          title="악기점 찾기"
+          showBackButton={true}
+          showUserMenu={true}
+        />
 
         {/* 메인 콘텐츠 */}
         <div className="px-6 py-8">

@@ -1,13 +1,14 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Plus, LayoutGrid, List, Search, ShoppingBag } from 'lucide-react';
-import { SearchFiltersComponent } from '@/components/molecules/SearchFilters';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Search, ShoppingBag, Plus, LayoutGrid, List } from 'lucide-react';
 import { InstrumentCard } from '@/components/molecules/InstrumentCard';
-import { useInfiniteProductSearch, flattenInfiniteData, getTotalElements } from '@/domains/instrument/hooks/useInfiniteProductSearch';
+import { useInfiniteProductSearch, flattenInfiniteData } from '@/domains/instrument/hooks/useInfiniteProductSearch';
 import { ProductSortableField, SortDirection, ProductStatus } from '@/domains/common/types/api';
-import { ProductOutput } from '@/domains/instrument/types/search';
+import { SearchProductRequest, ProductOutput } from '@/domains/instrument/types/search';
+import { SearchFiltersComponent } from '@/components/molecules/SearchFilters';
 import { SearchFilters } from '@/domains/instrument/types/search';
 import { Instrument } from '@/domains/common/types';
+import { CommonHeader } from '@/components/organisms/Header/CommonHeader';
 
 interface LocationState {
   searchQuery?: string;
@@ -42,11 +43,10 @@ function convertProductToInstrument(product: ProductOutput): Instrument {
 }
 
 export function MarketplacePage() {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
   const state = location.state as LocationState;
-  
-  // 상태 관리
+
   const [searchQuery, setSearchQuery] = useState(state?.searchQuery || '');
   const [filters, setFilters] = useState<SearchFilters>({
     keyword: state?.searchQuery || '',
@@ -62,106 +62,75 @@ export function MarketplacePage() {
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
   const [favoriteInstruments, setFavoriteInstruments] = useState<string[]>([]);
 
-  // 검색 파라미터 생성
-  const searchParams = {
-    keyword: filters.keyword || undefined,
-    categoryId: getCategoryId(filters.category),
-    location: filters.location,
-    condition: filters.condition,
-    conditionGrade: filters.conditionGrade,
-    minPrice: filters.priceRange.min,
-    maxPrice: filters.priceRange.max,
-    status: ProductStatus.SELLING,
-    pageSize: 20,
-    sort: filters.sortBy,
-    sortDirection: filters.sortDirection,
-  };
-
-  // 카테고리명을 실제 API의 카테고리 ID로 변환하는 함수
   function getCategoryId(categoryName?: string): number | undefined {
     if (!categoryName) return undefined;
     
-    // 실제 DB의 카테고리 구조에 맞게 매핑
+    // 카테고리 매핑 (실제로는 API에서 가져와야 함)
     const categoryMap: Record<string, number> = {
-      // 루트 카테고리 (depth=0)
       '기타': 1,
       '베이스': 2,
       '드럼': 3,
-      '건반악기': 4,
+      '피아노': 4,
       '관악기': 5,
-      // 하위 카테고리 (depth=1)
-      '일렉기타': 6,
-      '어쿠스틱기타': 7,
-      '클래식기타': 8,
-      '일렉베이스': 9,
-      '어쿠스틱베이스': 10,
-      '어쿠스틱드럼': 11,
-      '전자드럼': 12,
-      '피아노': 13,
-      '신디사이저': 14,
-      '색소폰': 15,
-      '트럼펫': 16,
+      '현악기': 6,
     };
     
     return categoryMap[categoryName];
   }
 
-  // 무한 스크롤 쿼리
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
+  const searchParams: SearchProductRequest = {
+    pageSize: 12,
+    sort: filters.sortBy,
+    sortDirection: filters.sortDirection,
+    status: ProductStatus.SELLING,
+    categoryId: getCategoryId(filters.category),
+    minPrice: filters.priceRange.min,
+    maxPrice: filters.priceRange.max,
+    condition: filters.condition,
+    conditionGrade: filters.conditionGrade,
+    ...(searchQuery.trim() && { keyword: searchQuery.trim() }),
+  };
+
+  const { 
+    data: searchResult, 
+    fetchNextPage, 
+    hasNextPage, 
     isFetchingNextPage,
     isLoading,
     isError,
-    error,
+    error
   } = useInfiniteProductSearch(searchParams);
 
-  // 데이터 변환
-  const allProducts = flattenInfiniteData(data?.pages);
-  const instruments = allProducts.map(convertProductToInstrument);
-  const totalCount = getTotalElements(data?.pages);
+  const instruments = flattenInfiniteData(searchResult?.pages).map(convertProductToInstrument) || [];
+  const totalCount = searchResult?.pages[0]?.totalElements || 0;
 
-  // 초기 상태 설정
+  // 무한 스크롤
   useEffect(() => {
-    if (state?.searchQuery) {
-      setSearchQuery(state.searchQuery);
-      setFilters(prev => ({ ...prev, keyword: state.searchQuery || '' }));
-    }
-  }, [state]);
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 1000 &&
+        hasNextPage &&
+        !isFetchingNextPage
+      ) {
+        fetchNextPage();
+      }
+    };
 
-  // 무한 스크롤 핸들러
-  const handleScroll = useCallback(() => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 1000 &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  // 스크롤 이벤트 등록
-  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // 검색 핸들러
   const handleSearch = () => {
-    setFilters(prev => ({ ...prev, keyword: searchQuery }));
+    // 검색 로직은 이미 searchParams에 반영됨
   };
 
-  // 필터 변경 핸들러
   const handleFiltersChange = (newFilters: SearchFilters) => {
     setFilters(newFilters);
-    setSearchQuery(newFilters.keyword);
   };
 
-  // 필터 초기화 핸들러
   const handleClearFilters = () => {
-    const clearedFilters: SearchFilters = {
+    setFilters({
       keyword: '',
       category: undefined,
       location: undefined,
@@ -170,12 +139,10 @@ export function MarketplacePage() {
       priceRange: { min: undefined, max: undefined },
       sortBy: ProductSortableField.CREATED_AT,
       sortDirection: SortDirection.DESC,
-    };
-    setFilters(clearedFilters);
+    });
     setSearchQuery('');
   };
 
-  // 즐겨찾기 핸들러
   const handleFavoriteClick = (id: string) => {
     setFavoriteInstruments(prev => {
       if (prev.includes(id)) {
@@ -185,31 +152,20 @@ export function MarketplacePage() {
     });
   };
 
-  // 악기 클릭 핸들러
   const handleInstrumentClick = (instrument: Instrument) => {
     navigate(`/instrument/${instrument.id}`);
-  };
-
-  const handleLogoClick = () => {
-    navigate('/');
   };
 
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       <div className="max-w-7xl mx-auto">
-        {/* 헤더 - HomePage와 통일 */}
-        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm px-6 py-3">
-          <div className="flex items-center gap-6 h-16">
-            <button
-              onClick={handleLogoClick}
-              className="flex items-center gap-2 group transition-all duration-300 hover:scale-105"
-            >
-              <span className="text-2xl group-hover:rotate-12 transition-transform duration-300">🎸</span>
-              <span className="text-xl font-bold text-gray-800 group-hover:text-orange-600 transition-colors duration-300">뮤직마켓</span>
-            </button>
-            
-            <div className="flex-1" />
-            
+        {/* 공통 헤더 사용 */}
+        <CommonHeader
+          variant="default"
+          showLogo={true}
+          showSearch={false}
+          showUserMenu={true}
+          customContent={
             <button
               onClick={() => navigate('/marketplace/register')}
               className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-all duration-300 hover:scale-105 font-medium text-sm"
@@ -217,8 +173,8 @@ export function MarketplacePage() {
               <Plus className="w-3 h-3" />
               중고악기 등록
             </button>
-          </div>
-        </div>
+          }
+        />
 
         {/* 메인 콘텐츠 */}
         <div className="px-6 py-8">
@@ -396,15 +352,8 @@ export function MarketplacePage() {
                     <div className="text-center py-8">
                       <div className="inline-flex items-center gap-3 text-orange-600 bg-orange-50 px-6 py-3 rounded-full">
                         <div className="w-4 h-4 border-2 border-orange-200 border-t-orange-600 rounded-full animate-spin"></div>
-                        <span className="text-sm">더 많은 상품을 불러오는 중...</span>
+                        <span className="text-sm font-medium">더 많은 상품을 불러오는 중...</span>
                       </div>
-                    </div>
-                  )}
-
-                  {/* 더 이상 불러올 데이터가 없을 때 */}
-                  {!hasNextPage && instruments.length > 0 && (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500">모든 상품을 확인했습니다.</p>
                     </div>
                   )}
                 </>
