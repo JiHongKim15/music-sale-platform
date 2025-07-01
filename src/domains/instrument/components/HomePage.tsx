@@ -9,7 +9,8 @@ import { CategoryDisplayItem } from '@/domains/common/types/category';
 import { Instrument } from '@/domains/common/types';
 import { ChevronDown, LayoutGrid, List, Search } from 'lucide-react';
 import { LoginModal } from '@/domains/auth/LoginModal';
-import { Button, IconButton } from '@/components/atoms';
+import { Button } from '@/components/ui/button';
+import { IconButton } from '@/components/ui/icon-button';
 import { CommonHeader } from '@/components/organisms/Header/CommonHeader';
 
 function convertProductToInstrument(product: ProductOutput): Instrument {
@@ -124,7 +125,7 @@ export function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div className="min-h-screen bg-background" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       <div className="max-w-7xl mx-auto">
         {/* 공통 헤더 사용 */}
         <CommonHeader
@@ -151,10 +152,10 @@ export function HomePage() {
                       className="flex flex-col items-center focus:outline-none"
                       type="button"
                     >
-                      <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mb-1">
-                        <span className="text-xl">{category.icon}</span>
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                        <span className="text-xl text-primary">{category.icon}</span>
                       </div>
-                      <span className="text-sm text-gray-800 mt-0.5">{category.name}</span>
+                      <span className="text-sm text-text-primary mt-0.5">{category.name}</span>
                     </button>
                   ))}
                 </div>
@@ -176,18 +177,18 @@ export function HomePage() {
               <div className="max-w-5xl mx-auto">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-1">최신 상품</h2>
-                    <p className="text-sm text-gray-600">{items.length}개의 상품</p>
+                    <h2 className="text-2xl font-bold text-text-primary mb-1">최신 상품</h2>
+                    <p className="text-sm text-text-secondary">{items.length}개의 상품</p>
                   </div>
                   
                   {/* 뷰모드 토글 */}
-                  <div className="flex items-center gap-1 bg-gray-50 rounded-full p-1">
+                  <div className="flex items-center gap-1 bg-primary/5 rounded-full p-1">
                     <IconButton
                       size="icon_sm"
                       onClick={() => setViewMode('grid')}
                       className={viewMode === 'grid' 
-                        ? 'bg-white text-orange-600 shadow-sm' 
-                        : 'text-gray-400 hover:text-gray-600 hover:bg-white'
+                        ? 'bg-primary/10 text-primary shadow-sm' 
+                        : 'text-text-secondary hover:text-primary hover:bg-primary/10'
                       }
                     >
                       <LayoutGrid className="w-3 h-3" />
@@ -196,8 +197,8 @@ export function HomePage() {
                       size="icon_sm"
                       onClick={() => setViewMode('list')}
                       className={viewMode === 'list' 
-                        ? 'bg-white text-orange-600 shadow-sm' 
-                        : 'text-gray-400 hover:text-gray-600 hover:bg-white'
+                        ? 'bg-primary/10 text-primary shadow-sm' 
+                        : 'text-text-secondary hover:text-primary hover:bg-primary/10'
                       }
                     >
                       <List className="w-3 h-3" />

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, Check, X, Phone, Mail, User, Lock, ArrowLeft, Home } from 'lucide-react';
 import { AuthApiService, UserRole, CreateUserByEmailRequest } from '../services/authApi';
-import { 
-  PrimaryButton 
-} from '@/components/atoms';
+import { Button } from '@/components/ui/button';
 import { AuthButtons } from '@/domains/auth/components/AuthButtons';
 import { CommonHeader } from '@/components/organisms/Header/CommonHeader';
+import { Eye, EyeOff, Check, X, Music } from 'lucide-react';
 
 interface FormData {
   email: string;
@@ -365,6 +363,47 @@ export const SignupPage: React.FC = () => {
     }
   };
 
+  // 매장 판매자 등록 상태 관리
+  const [showSellerForm, setShowSellerForm] = useState(false);
+  const [storeVerification, setStoreVerification] = useState({
+    isRequested: false,
+    isVerified: false,
+    code: '',
+    timeLeft: 0,
+    isVerifying: false,
+  });
+
+  // 매장 인증 타이머
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (storeVerification.timeLeft > 0) {
+      timer = setTimeout(() => {
+        setStoreVerification(prev => ({ ...prev, timeLeft: prev.timeLeft - 1 }));
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [storeVerification.timeLeft]);
+
+  const requestStoreVerification = async () => {
+    if (!formData.storePhone) {
+      alert('매장 전화번호를 입력해주세요.');
+      return;
+    }
+    // TODO: 실제 인증 API 연동
+    setStoreVerification(prev => ({ ...prev, isRequested: true, timeLeft: 180 }));
+    alert('매장 인증번호가 발송되었습니다.');
+  };
+
+  const confirmStoreVerification = async () => {
+    if (!storeVerification.code) {
+      alert('인증번호를 입력해주세요.');
+      return;
+    }
+    // TODO: 실제 인증 API 연동
+    setStoreVerification(prev => ({ ...prev, isVerified: true }));
+    alert('매장 인증이 완료되었습니다!');
+  };
+
   // 회원가입 처리
   const handleSubmit = async () => {
     if (!phoneVerification.isVerified) {
@@ -395,12 +434,6 @@ export const SignupPage: React.FC = () => {
     }
   };
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
   const canProceedToStep2 = () => {
     return validation.email.isValid &&
            validation.password.isValid &&
@@ -411,45 +444,24 @@ export const SignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CommonHeader
-        title="회원가입"
-        showBackButton
-        showLogo
-        showUserMenu={false}
-      />
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-8">
-        <div className={`w-full max-w-md bg-white rounded-2xl shadow-lg p-8 transition-all duration-500 ${sellerTransition ? 'animate-slide-in' : ''}`}>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">회원가입</h2>
-          <div className="flex justify-center mb-6">
-            {isSeller ? (
-              <button
-                onClick={() => navigate('/signup')}
-                className="text-gray-500 font-semibold hover:underline px-3 py-1 rounded-full transition-colors duration-200 bg-gray-50"
-              >
-                구매자 회원가입으로 돌아가기
-              </button>
-            ) : (
-              <Link
-                to="/signup?type=seller"
-                className={`text-orange-600 font-semibold hover:underline px-3 py-1 rounded-full transition-colors duration-200 ${isSeller ? 'bg-orange-50' : ''}`}
-              >
-                매장 판매자 등록
-              </Link>
-            )}
+    <div className="min-h-screen bg-gradient-to-br from-background to-primary/5 flex flex-col">
+      <main className="flex-1 flex items-center justify-center py-12">
+        <div className="w-full max-w-md px-6 py-10 mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="mb-10 flex flex-col items-center">
+            <Music className="w-12 h-12 text-primary mb-2" />
+            <h2 className="text-3xl font-bold text-text-primary text-center tracking-tight">회원가입</h2>
           </div>
-          <AuthButtons
-            onGoogle={() => alert('구글 회원가입')}
-            onNaver={() => alert('네이버 회원가입')}
-            onKakao={() => alert('카카오 회원가입')}
-          />
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-gray-400">또는 휴대폰 번호로 가입</span>
-            </div>
+          <div className="flex flex-col gap-3 mb-8">
+            <AuthButtons
+              onGoogle={() => alert('구글 회원가입')}
+              onNaver={() => alert('네이버 회원가입')}
+              onKakao={() => alert('카카오 회원가입')}
+            />
+          </div>
+          <div className="flex items-center my-6">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="mx-4 text-sm text-text-secondary">또는 이메일로 회원가입</span>
+            <div className="flex-1 h-px bg-gray-200" />
           </div>
           {currentStep === 1 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
@@ -466,7 +478,6 @@ export const SignupPage: React.FC = () => {
                     className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
                     placeholder="010-1234-5678"
                   />
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   {validation.phoneNumber.isChecking && (
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-orange-300 border-t-orange-600 rounded-full animate-spin" />
                   )}
@@ -499,7 +510,6 @@ export const SignupPage: React.FC = () => {
                     className="w-full px-4 py-3 pl-10 pr-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
                     placeholder="비밀번호를 입력하세요"
                   />
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -527,7 +537,6 @@ export const SignupPage: React.FC = () => {
                     className="w-full px-4 py-3 pl-10 pr-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
                     placeholder="비밀번호를 다시 입력하세요"
                   />
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -555,7 +564,6 @@ export const SignupPage: React.FC = () => {
                     className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
                     placeholder="이름을 입력하세요"
                   />
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
                 {validation.name.message && (
                   <p className={`text-xs mt-1 ${validation.name.isValid ? 'text-green-600' : 'text-red-600'}`}>
@@ -576,7 +584,6 @@ export const SignupPage: React.FC = () => {
                     className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
                     placeholder="이메일을 입력하세요 (선택)"
                   />
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
                 {validation.email.message && (
                   <p className={`text-xs mt-1 ${validation.email.isValid ? 'text-green-600' : 'text-red-600'}`}>
@@ -597,7 +604,6 @@ export const SignupPage: React.FC = () => {
                     className="w-full px-4 py-3 pl-10 bg-gray-50 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all duration-300"
                     placeholder="닉네임을 입력하세요"
                   />
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
                 {validation.nickname.message && (
                   <p className={`text-xs mt-1 ${validation.nickname.isValid ? 'text-green-600' : 'text-red-600'}`}>
@@ -605,76 +611,104 @@ export const SignupPage: React.FC = () => {
                   </p>
                 )}
               </div>
-              {isSeller && (
-                <div className="space-y-4 animate-in fade-in slide-in-from-bottom duration-500">
-                  <div className="p-4 bg-orange-50 rounded-xl border border-orange-200">
-                    <h3 className="text-sm font-semibold text-orange-800 mb-3 flex items-center gap-2">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-                      매장 정보
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="relative">
-                        <input
-                          type="text"
-                          value={formData.storeName || ''}
-                          onChange={e => setFormData(prev => ({ ...prev, storeName: e.target.value }))}
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all duration-300"
-                          placeholder="매장명"
-                          required
-                        />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                          {formData.storeName && (
-                            <Check className="w-4 h-4 text-green-500 animate-in zoom-in duration-200" />
-                          )}
-                        </div>
-                      </div>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          value={formData.storeAddress || ''}
-                          onChange={e => setFormData(prev => ({ ...prev, storeAddress: e.target.value }))}
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all duration-300"
-                          placeholder="매장 위치(주소)"
-                          required
-                        />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                          {formData.storeAddress && (
-                            <Check className="w-4 h-4 text-green-500 animate-in zoom-in duration-200" />
-                          )}
-                        </div>
-                      </div>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          value={formData.storePhone || ''}
-                          onChange={e => setFormData(prev => ({ ...prev, storePhone: e.target.value }))}
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all duration-300"
-                          placeholder="매장 전화번호"
-                          required
-                        />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                          {formData.storePhone && (
-                            <Check className="w-4 h-4 text-green-500 animate-in zoom-in duration-200" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              <PrimaryButton
-                size="xl"
-                shape="rounded"
+              <Button
+                size="lg"
                 onClick={() => setCurrentStep(2)}
                 disabled={!canProceedToStep2()}
                 className="w-full py-4 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               >
                 인증번호 받기
-              </PrimaryButton>
+              </Button>
             </div>
           )}
+          <div className="mt-8 flex flex-col items-center">
+            {!showSellerForm && (
+              <button
+                type="button"
+                onClick={() => setShowSellerForm(true)}
+                className="w-full max-w-md py-3 rounded-xl bg-orange-50 text-orange-600 font-semibold hover:bg-orange-100 transition-colors duration-200 shadow-sm border border-orange-200"
+              >
+                + 매장 판매자 등록
+              </button>
+            )}
+          </div>
+          {showSellerForm && (
+            <div className="mt-6 w-full max-w-md animate-in fade-in slide-in-from-bottom duration-500">
+              <div className="bg-orange-50 border border-orange-200 rounded-2xl shadow-md p-6">
+                <h3 className="text-base font-bold text-orange-800 mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
+                  매장 정보
+                </h3>
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    value={formData.storeName || ''}
+                    onChange={e => setFormData(prev => ({ ...prev, storeName: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl border border-orange-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all"
+                    placeholder="매장명"
+                    required
+                  />
+                  <input
+                    type="text"
+                    value={formData.storeAddress || ''}
+                    onChange={e => setFormData(prev => ({ ...prev, storeAddress: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl border border-orange-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all"
+                    placeholder="매장 위치(주소)"
+                    required
+                  />
+                  <input
+                    type="text"
+                    value={formData.storePhone || ''}
+                    onChange={e => setFormData(prev => ({ ...prev, storePhone: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl border border-orange-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all"
+                    placeholder="매장 전화번호"
+                    required
+                  />
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={storeVerification.code}
+                      onChange={e => setStoreVerification(prev => ({ ...prev, code: e.target.value }))}
+                      className="flex-1 px-4 py-3 rounded-xl border border-orange-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all"
+                      placeholder="인증번호 입력"
+                      disabled={!storeVerification.isRequested}
+                    />
+                    <button
+                      type="button"
+                      onClick={requestStoreVerification}
+                      className="px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors disabled:bg-gray-300"
+                      disabled={storeVerification.isRequested && storeVerification.timeLeft > 0}
+                    >
+                      {storeVerification.isRequested && storeVerification.timeLeft > 0
+                        ? `재전송 (${Math.floor(storeVerification.timeLeft / 60)}:${(storeVerification.timeLeft % 60).toString().padStart(2, '0')})`
+                        : '인증번호 받기'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={confirmStoreVerification}
+                      className="px-4 py-3 rounded-xl bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors disabled:bg-gray-300"
+                      disabled={!storeVerification.isRequested || storeVerification.isVerified}
+                    >
+                      인증확인
+                    </button>
+                  </div>
+                  {storeVerification.isVerified && (
+                    <div className="text-green-600 text-sm font-semibold mt-2">매장 인증이 완료되었습니다!</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          <Button
+            size="lg"
+            onClick={handleSubmit}
+            disabled={!canProceedToStep2() || (showSellerForm && !storeVerification.isVerified) || !phoneVerification.isVerified}
+            className="w-full max-w-md mt-8 py-4 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] bg-orange-400 text-white font-bold text-lg rounded-2xl shadow-md"
+          >
+            회원가입 완료
+          </Button>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

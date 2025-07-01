@@ -3,12 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, User, Music } from 'lucide-react';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/stores/atoms';
-import { 
-  Button, 
-  PrimaryButton, 
-  IconButton, 
-  MenuButton 
-} from '@/components/atoms';
+import { Button } from '@/components/ui/button';
 
 interface CommonHeaderProps {
   variant?: 'default' | 'simple' | 'search' | 'back';
@@ -69,38 +64,41 @@ export function CommonHeader({
     }
   };
 
-  // Variant별 레이아웃
+  // Variant별 레이아웃 개선
   const renderContent = () => {
     switch (variant) {
       case 'simple':
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 px-4 py-3 bg-white/90 rounded-2xl shadow-sm">
             {showBackButton && (
-              <IconButton
-                size="icon_md"
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => navigate(-1)}
+                className="hover:bg-primary/10 text-primary transition-all duration-200"
               >
-                <ArrowLeft className="w-5 h-5" />
-              </IconButton>
+                <ArrowLeft className="w-6 h-6" />
+              </Button>
             )}
             <div className="flex-1">
-              {title && <h1 className="text-xl font-bold text-gray-900">{title}</h1>}
+              {title && <h1 className="text-2xl font-bold text-text-primary tracking-tight">{title}</h1>}
               {customContent}
             </div>
             {showUserMenu && renderUserMenu()}
           </div>
         );
-
       case 'search':
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 px-4 py-3 bg-white/90 rounded-2xl shadow-sm">
             {showBackButton && (
-              <IconButton
-                size="icon_md"
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => navigate(-1)}
+                className="hover:bg-primary/10 text-primary transition-all duration-200"
               >
-                <ArrowLeft className="w-5 h-5" />
-              </IconButton>
+                <ArrowLeft className="w-6 h-6" />
+              </Button>
             )}
             <div className="flex-1">
               {renderSearchBar()}
@@ -108,63 +106,54 @@ export function CommonHeader({
             {showUserMenu && renderUserMenu()}
           </div>
         );
-
       case 'back':
         return (
-          <div className="flex items-center gap-4">
-            <IconButton
-              size="icon_md"
+          <div className="flex items-center gap-4 px-4 py-3 bg-white/90 rounded-2xl shadow-sm">
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => navigate(-1)}
+              className="hover:bg-primary/10 text-primary transition-all duration-200"
             >
-              <ArrowLeft className="w-5 h-5" />
-            </IconButton>
+              <ArrowLeft className="w-6 h-6" />
+            </Button>
             <div className="flex-1">
-              {title && <h1 className="text-xl font-bold text-gray-900">{title}</h1>}
+              {title && <h1 className="text-2xl font-bold text-text-primary tracking-tight">{title}</h1>}
               {customContent}
             </div>
             {showUserMenu && renderUserMenu()}
           </div>
         );
-
-      default: // 'default'
+      default:
         return (
-          <div className="flex items-center gap-2">
-            {/* 로고 */}
+          <div className="flex items-center w-full px-4 py-3 gap-3 bg-surface/90 rounded-2xl shadow-sm">
             {showLogo && (
               <Button
                 variant="ghost"
-                size="lg"
-                shape="pill"
+                size="icon"
                 onClick={handleLogoClick}
-                leftIcon={<Music className="w-6 h-6 text-orange-600 group-hover:rotate-12 transition-transform duration-300" />}
-                className="text-xl font-bold text-gray-800 group-hover:text-orange-600 transition-colors duration-300 hover:bg-transparent focus:bg-transparent active:bg-transparent"
-              >
-              </Button>
+                leftIcon={<Music className="w-7 h-7 text-primary group-hover:rotate-12 transition-transform duration-300" />}
+                className="flex-shrink-0 hover:bg-primary/10"
+              />
             )}
-
-            {/* 검색창 */}
             {showSearch && (
-              <div className="flex-1 max-w-2xl mx-auto">
+              <div className="flex-1 flex justify-center items-center min-w-0">
                 {renderSearchBar()}
               </div>
             )}
-
-            {/* 커스텀 콘텐츠 */}
-            {customContent && (
-              <div className="flex-1">
-                {customContent}
+            {showUserMenu && (
+              <div className="flex-shrink-0 flex items-center">
+                {renderUserMenu()}
               </div>
             )}
-
-            {/* 사용자 메뉴 */}
-            {showUserMenu && renderUserMenu()}
           </div>
         );
     }
   };
 
+  // 검색창 스타일 개선
   const renderSearchBar = () => (
-    <div className={`relative group transition-all duration-300 ${isSearchFocused ? 'scale-[1.02]' : ''}`}>
+    <div className={`relative group transition-all duration-300 ${isSearchFocused ? 'scale-[1.03]' : ''}`}>
       <input
         type="text"
         value={searchValue}
@@ -172,40 +161,35 @@ export function CommonHeader({
         onKeyPress={handleSearchKeyPress}
         onFocus={() => setIsSearchFocused(true)}
         onBlur={() => setIsSearchFocused(false)}
-        className={`w-full px-6 py-3 text-base rounded-full transition-all duration-300 placeholder:text-gray-400 ${
-          isSearchFocused 
-            ? 'bg-white ring-2 ring-orange-200 shadow-md' 
-            : 'bg-gray-50 hover:bg-white hover:shadow-sm'
-        } focus:outline-none`}
-        placeholder="어떤 악기를 찾고 계신가요?"
+        className={`w-full px-7 py-3 text-lg rounded-full transition-all duration-300 placeholder:text-text-secondary bg-[#F8FAFC] border-2 border-[#E0E7EF] focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm ${isSearchFocused ? 'ring-2 ring-primary/30 bg-white' : ''}`}
+        placeholder="검색"
       />
-      <IconButton
-        size="icon_sm"
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={handleSearch}
-        className={`absolute right-2 top-1/2 -translate-y-1/2 ${
-          isSearchFocused 
-            ? 'text-orange-600 bg-orange-50 scale-105' 
-            : 'text-gray-400 hover:text-orange-600 hover:bg-orange-50'
-        }`}
+        className={`absolute right-2 top-1/2 -translate-y-1/2 bg-primary/10 text-primary hover:bg-primary/20 transition-all duration-200`}
       >
-        <Search className="w-4 h-4" />
-      </IconButton>
+        <Search className="w-5 h-5" />
+      </Button>
     </div>
   );
 
   const renderUserMenu = () => (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3 ml-auto">
       {user ? (
         <div className="relative" ref={userMenuRef}>
-          <IconButton
-            size="icon_md"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setShowUserMenuDropdown(!showUserMenuDropdown)}
           >
-            <User className="w-4 h-4" />
-          </IconButton>
+            <User className="w-5 h-5" />
+          </Button>
           {showUserMenuDropdown && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-lg py-2 animate-in slide-in-from-top-2 duration-200">
-              <MenuButton
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => {
                   navigate('/profile');
@@ -213,8 +197,9 @@ export function CommonHeader({
                 }}
               >
                 내 프로필
-              </MenuButton>
-              <MenuButton
+              </Button>
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => {
                   navigate('/favorites');
@@ -222,8 +207,9 @@ export function CommonHeader({
                 }}
               >
                 찜 목록
-              </MenuButton>
-              <MenuButton
+              </Button>
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => {
                   setUser(null);
@@ -232,28 +218,28 @@ export function CommonHeader({
                 className="text-gray-700 hover:text-red-500 hover:bg-red-50"
               >
                 로그아웃
-              </MenuButton>
+              </Button>
             </div>
           )}
         </div>
       ) : (
-        <PrimaryButton
-          size="lg"
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => navigate('/login')}
+          className="ml-auto"
         >
-          로그인
-        </PrimaryButton>
+          <User className="w-6 h-6" />
+        </Button>
       )}
     </div>
   );
 
   return (
-    <div className={`sticky top-0 z-50 bg-white/95 backdrop-blur-sm px-6 py-3 ${className}`}>
-      <div className="max-w-7xl mx-auto">
-        <div className="h-16 flex items-center">
-          {renderContent()}
-        </div>
+    <header className={`w-full z-40 bg-transparent ${className}`}>
+      <div className="max-w-4xl mx-auto px-2 sm:px-4">
+        {renderContent()}
       </div>
-    </div>
+    </header>
   );
 } 

@@ -9,53 +9,58 @@ export function useTheme() {
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       primary: {
-        main: '#3b82f6',
-        light: '#60a5fa',
-        dark: '#2563eb',
+        main: '#2EC4F1',
+        light: '#A0E9F6',
+        dark: '#1A9ED9',
       },
       secondary: {
-        main: '#f59e0b',
-        light: '#fbbf24',
-        dark: '#d97706',
+        main: '#00D8B0',
+        light: '#5FFFE1',
+        dark: '#00B894',
       },
       error: {
-        main: '#ef4444',
+        main: '#FF5A5F',
       },
       warning: {
-        main: '#f97316',
+        main: '#FFC542',
       },
       info: {
-        main: '#3b82f6',
+        main: '#2EC4F1',
       },
       success: {
-        main: '#22c55e',
+        main: '#22C55E',
       },
       background: {
-        default: isDarkMode ? '#121212' : '#f3f4f6',
-        paper: isDarkMode ? '#1e1e1e' : '#ffffff',
+        default: isDarkMode ? '#181F2A' : '#F8FAFC',
+        paper: isDarkMode ? '#232B3B' : '#FFFFFF',
       },
       text: {
-        primary: isDarkMode ? '#ffffff' : '#111827',
-        secondary: isDarkMode ? '#9ca3af' : '#4b5563',
+        primary: isDarkMode ? '#FFFFFF' : '#1A2A3A',
+        secondary: isDarkMode ? '#A3B8CC' : '#7B8FA1',
       },
     },
     typography: {
       fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
+        'Inter',
+        'Pretendard',
+        'Apple SD Gothic Neo',
         'sans-serif',
       ].join(','),
     },
+    shape: {
+      borderRadius: 16,
+    },
+    spacing: 8,
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
             textTransform: 'none',
-            borderRadius: '0.375rem',
+            borderRadius: 16,
+            minHeight: 48,
+            fontWeight: 600,
+            fontSize: '1rem',
+            letterSpacing: '0.01em',
           },
         },
       },
@@ -63,7 +68,9 @@ export function useTheme() {
         styleOverrides: {
           root: {
             '& .MuiOutlinedInput-root': {
-              borderRadius: '0.375rem',
+              borderRadius: 16,
+              minHeight: 48,
+              fontSize: '1rem',
             },
           },
         },
