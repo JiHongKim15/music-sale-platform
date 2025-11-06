@@ -1,7 +1,6 @@
 import React from "react";
 import { Bell } from "lucide-react"; // 아이콘용
-// 나중에 SearchBar를 추가할 예정이에요.
-// import SearchBar from "@/domains/filter/components/SearchBar";
+import SearchBar from "@/domains/filter/components/SearchBar";
 
 export default function Header() {
   return (
@@ -16,7 +15,7 @@ export default function Header() {
       </div>
 
       {/* 검색창 자리 */}
-      <div>{/* <SearchBar /> */}</div>
+      <SearchBar />
     </header>
   );
 }
