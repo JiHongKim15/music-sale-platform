@@ -1,13 +1,14 @@
 // src/domains/filter/components/SearchBar.tsx
-import { useState } from "react";
+import { FormEvent } from "react";
 import { Search } from "lucide-react";
+import { useSearch } from "../hooks/useSearch";
 
 export default function SearchBar() {
-  const [keyword, setKeyword] = useState("");
+  const { keyword, setKeyword, handleSearch } = useSearch();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log("검색어:", keyword);
+    handleSearch(); // 🔍 실제 검색 실행
   };
 
   return (
