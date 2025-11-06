@@ -1,6 +1,6 @@
 import React from "react";
 
-//홈 페이지 컴포넌트
+// 홈 페이지 컴포넌트
 export function HomePage() {
   return (
     <>
