@@ -1,4 +1,3 @@
-// src/domains/filter/components/SearchResultList.tsx
 import React from "react";
 
 interface SearchResultListProps {

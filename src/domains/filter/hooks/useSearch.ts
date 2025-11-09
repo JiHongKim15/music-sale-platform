@@ -1,4 +1,3 @@
-// src/domains/filter/hooks/useSearch.ts
 import { useState } from "react";
 import { searchProductsMock } from "../services/mockSearchApi";
 
@@ -12,7 +11,7 @@ export const useSearch = () => {
     if (!keyword.trim()) return;
     const data = await searchProductsMock(keyword);
     setResults(data);
-    console.log("검색 결과:", data); // ✅ 테스트용 콘솔 출력
+    console.log("검색 결과:", data); // 테스트용 콘솔 출력
   };
 
   return {

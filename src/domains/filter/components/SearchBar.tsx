@@ -1,8 +1,7 @@
-// src/domains/filter/components/SearchBar.tsx
 import { FormEvent } from "react";
 import { Search } from "lucide-react";
 import { useSearch } from "../hooks/useSearch";
-import SearchResultList from "./SearchResultList"; // ✅ 추가
+import SearchResultList from "./SearchResultList";
 
 export default function SearchBar() {
   const { keyword, setKeyword, handleSearch, results } = useSearch();
@@ -28,7 +27,7 @@ export default function SearchBar() {
         />
       </form>
 
-      {/* ✅ 검색 결과 표시 */}
+      {/* 검색 결과 표시 */}
       <SearchResultList results={results} />
     </div>
   );
