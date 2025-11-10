@@ -12,18 +12,19 @@ export default function SearchBar() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col w-full gap-2">
+      {/* 검색창 */}
       <form
         onSubmit={handleSubmit}
-        className="flex items-center px-3 py-2 bg-gray-100 rounded-lg"
+        className="flex items-center w-full h-12 gap-2 px-4 bg-white shadow-md rounded-2xl"
       >
-        <Search className="w-4 h-4 text-gray-500" />
+        <Search className="w-5 h-5 text-gray-400" />
         <input
           type="text"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          placeholder="검색어를 입력하세요"
-          className="w-full ml-2 bg-transparent outline-none"
+          placeholder="Search"
+          className="flex-1 text-sm text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none"
         />
       </form>
 
