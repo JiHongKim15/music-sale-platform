@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Header } from "@/shares/layouts/Header";
+import Header from "@/shares/layouts/Header";
 import { Footer } from "@/shares/layouts/Footer";
 
 //레이아웃 컴포넌트
