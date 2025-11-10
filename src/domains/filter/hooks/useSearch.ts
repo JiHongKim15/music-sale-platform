@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { searchProductsMock } from "../services/mockSearchApi";
+import { searchProductsMock } from "../apis/mockSearchApi";
 
 // 검색 관련 로직을 관리하는 훅
 export const useSearch = () => {
