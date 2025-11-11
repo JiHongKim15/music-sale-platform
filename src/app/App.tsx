@@ -1,6 +1,10 @@
 import { HomePage } from "@/pages/HomePage";
 import { Layout } from "@/shares/layouts/Layout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import CommunityPage from "@/pages/CommunityPage";
+import MapPage from "@/pages/MapPage";
+import ChatPage from "@/pages/ChatPage";
+import ProfilePage from "@/pages/ProfilePage";
 
 function AppContent() {
   return (
@@ -11,7 +15,10 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="/login" element={<div>Login Page</div>} />
+          <Route path="/community" element={<CommunityPage />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </div>
