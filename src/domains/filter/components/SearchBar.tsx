@@ -28,8 +28,10 @@ export default function SearchBar() {
         />
       </form>
 
-      {/* 검색 결과 표시 */}
-      <SearchResultList results={results} />
+      {keyword && (
+       <SearchResultList results={results} />
+      )}
+
     </div>
   );
 }
