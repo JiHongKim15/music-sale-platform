@@ -323,7 +323,7 @@
   }
 }
 
-/* ✨ 반짝 쉬머 효과 */
+/* 쉬머 효과 */
 .shimmer {
   position: relative;
   overflow: hidden;
@@ -352,7 +352,7 @@
   }
 }
 
-/* ✨ 카드 페이드 인 */
+/* 카드 페이드 인 */
 @keyframes fadeIn {
   0% {
     opacity: 0;
