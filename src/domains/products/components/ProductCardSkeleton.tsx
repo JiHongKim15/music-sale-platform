@@ -1,32 +1,30 @@
-import Skeleton from "@/shares/loadings/Skeleton";
-
 export default function ProductCardSkeleton() {
   return (
-    <div className="bg-white rounded-[23px] shadow-md overflow-hidden w-full">
-      {/* 이미지 영역 */}
-      <Skeleton className="w-full h-[129px] rounded-none" />
+    <div className="w-full animate-pulse rounded-[23px] bg-white shadow-sm">
+      {/* 이미지 박스 */}
+      <div className="relative w-full h-[129px] bg-gray-200 rounded-t-[23px] overflow-hidden shimmer" />
 
-      {/* 텍스트 영역 */}
+      {/* 내용 영역 */}
       <div className="p-2.5 space-y-2">
         {/* 제목 */}
-        <Skeleton className="w-3/4 h-3" />
+        <div className="h-3 w-3/4 bg-gray-200 rounded shimmer" />
 
         {/* 뱃지 2개 */}
-        <div className="flex gap-2">
-          <Skeleton className="w-8 h-3 rounded" />
-          <Skeleton className="w-12 h-3 rounded" />
+        <div className="flex gap-1 pt-1">
+          <div className="h-[10px] w-[36px] bg-gray-200 rounded shimmer" />
+          <div className="h-[10px] w-[50px] bg-gray-200 rounded shimmer" />
         </div>
 
-        {/* 지역 | 시간 */}
-        <Skeleton className="w-2/3 h-2" />
+        {/* 위치/시간 */}
+        <div className="h-2 w-1/2 bg-gray-200 rounded shimmer" />
 
         {/* 가격 */}
-        <Skeleton className="w-1/3 h-4 mt-2" />
+        <div className="h-4 w-1/3 bg-gray-200 rounded pt-2 shimmer" />
 
-        {/* 하단 아이콘 */}
-        <div className="flex justify-end gap-3 mt-2">
-          <Skeleton className="w-5 h-3" />
-          <Skeleton className="w-5 h-3" />
+        {/* 아이콘 영역 */}
+        <div className="flex justify-end gap-2 pt-1">
+          <div className="h-3 w-6 bg-gray-200 rounded shimmer" />
+          <div className="h-3 w-6 bg-gray-200 rounded shimmer" />
         </div>
       </div>
     </div>

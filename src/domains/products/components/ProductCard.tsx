@@ -40,7 +40,7 @@ const ProductCard: FC<ProductCardProps> = ({
 
   return (
     <div
-      className="bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-[23px] overflow-hidden cursor-pointer w-full"
+      className="bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-[23px] overflow-hidden cursor-pointer w-full animate-fadeIn"
       onClick={onClick}
     >
       {/* 상품 이미지와 하트*/}
