@@ -5,9 +5,9 @@ import Footer from "@/shares/layouts/Footer";
 // 전체 레이아웃 컴포넌트
 export function Layout() {
   return (
-    <div className="flex justify-center w-full min-h-screen bg-gray-50">
+    <div className="flex justify-center w-full min-h-screen bg-gray-50 overflow-x-auto">
       {/* 중앙 고정된 박스 */}
-      <div className="relative flex flex-col w-[672px] min-h-screen shadow-[0_4px_20px_rgba(0,0,0,0.1)] bg-white">
+      <div className="relative flex flex-col w-[672px] max-w-[672px] min-w-[260px] min-h-screen shadow-[0_4px_20px_rgba(0,0,0,0.1)] bg-white">
         {/* 헤더 */}
         <Header />
 
