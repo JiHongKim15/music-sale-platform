@@ -20,14 +20,14 @@ export default function Footer() {
       className="fixed bottom-0 left-1/2 -translate-x-1/2
         w-full max-w-[672px]
         bg-white border-t border-gray-200 shadow-md
-        z-[100]"
+        z-[100] pb-safe-bottom"
     >
       <nav className="flex justify-around py-6">
         {navItems.map(({ icon, path }, index) => (
           <button
             key={index}
             onClick={() => navigate(path)}
-            className={`flex flex-col items-center ${
+            className={`flex flex-col items-center active:scale-[0.85] ${
               location.pathname === path ? "text-black" : "text-gray-400"
             }`}
           >

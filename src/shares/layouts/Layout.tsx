@@ -12,7 +12,7 @@ export function Layout() {
         <Header />
 
         {/* 메인 */}
-        <main className="flex-1 overflow-y-auto px-4 pt-[120px] pb-[90px]">
+        <main className="flex-1 overflow-y-auto px-4 pt-[120px] pb-[90px] animate-[fadeIn_0.3s_ease-out]">
           <Outlet />
         </main>
         {/* 푸터 */}
