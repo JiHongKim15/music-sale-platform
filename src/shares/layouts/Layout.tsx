@@ -9,7 +9,7 @@ export function Layout() {
       {/* 중앙 고정된 672px 박스 */}
       <div className="relative flex flex-col w-[672px] min-h-screen bg-white">
         {/* 헤더 */}
-        <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+        <header className="sticky top-0 z-50 bg-white">
           <Header />
         </header>
 

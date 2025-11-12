@@ -3,7 +3,7 @@ import SearchBar from "@/domains/filter/components/SearchBar";
 
 export default function Header() {
   return (
-    <header className="flex flex-col gap-3 px-5 py-3 bg-white border-b border-gray-200">
+    <header className="flex flex-col gap-3 px-5 py-3 bg-white">
       {/* 상단 로고 + 알림 */}
       <div className="flex items-center justify-between">
         <h1 className="text-[22px] font-bold text-gray-900 tracking-tight">

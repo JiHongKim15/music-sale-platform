@@ -16,7 +16,7 @@ export default function SearchBar() {
       {/* 검색창 */}
       <form
         onSubmit={handleSubmit}
-        className="flex items-center w-full h-12 gap-2 px-4 bg-white shadow-md rounded-2xl"
+        className="flex items-center w-full h-12 gap-2 px-4 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-2xl"
       >
         <Search className="w-5 h-5 text-gray-400" />
         <input
