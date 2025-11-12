@@ -28,10 +28,7 @@ export default function SearchBar() {
         />
       </form>
 
-      {keyword && (
-       <SearchResultList results={results} />
-      )}
-
+      {keyword && <SearchResultList results={results} />}
     </div>
   );
 }
