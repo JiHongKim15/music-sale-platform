@@ -32,8 +32,7 @@ const ProductCard: FC<ProductCardProps> = ({
   status,
   onClick,
 }) => {
-  // const imageUrl = `/images/${imageId}.jpg`;
-  const imageUrl = sampleImage; //임시 이미지
+  const imageUrl = sampleImage; 
   const isReserved = status === "RESERVED";
   const time = timeAgo(createdAt);
   const [liked, setLiked] = useState(false);
