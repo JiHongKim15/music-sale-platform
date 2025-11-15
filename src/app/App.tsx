@@ -5,6 +5,7 @@ import CommunityPage from "@/pages/CommunityPage";
 import MapPage from "@/pages/MapPage";
 import ChatPage from "@/pages/ChatPage";
 import ProfilePage from "@/pages/ProfilePage";
+import ProductDetailPage from "@/pages/ProductDetailPage";
 
 function AppContent() {
   return (
@@ -15,6 +16,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/chat" element={<ChatPage />} />

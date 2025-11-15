@@ -1,11 +1,15 @@
-import React from "react";
+import { Suspense } from "react";
+import ProductList from "@/domains/products/components/ProductList";
+import mockProducts from "@/domains/products/mocks/mockProduct";
+import ProductListSkeleton from "@/domains/products/components/ProductListSkeleton";
 
 // 홈 페이지 컴포넌트
 export function HomePage() {
   return (
-    <>
-      <h1 className="text-2xl font-bold">Home Page</h1>
-      <p className="text-gray-600 mt-2">Welcome to the homepage! 🎵</p>
-    </>
+    <div className="p-2">
+      <Suspense fallback={<ProductListSkeleton />}>
+        <ProductList products={mockProducts} />
+      </Suspense>
+    </div>
   );
 }
