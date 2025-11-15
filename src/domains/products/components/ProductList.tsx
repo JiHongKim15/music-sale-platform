@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import ProductCard from "@/domains/products/components/ProductCard";
 
 interface ProductListProps {
@@ -17,6 +18,8 @@ interface ProductListProps {
 }
 
 export default function ProductList({ products }: ProductListProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {products.map((item) => (
@@ -32,6 +35,7 @@ export default function ProductList({ products }: ProductListProps) {
           chats={item.chats}
           imageId={item.imageId}
           status={item.status as "AVAILABLE" | "RESERVED" | "SOLD" | "INACTIVE"}
+          onClick={() => navigate(`/product/${item.id}`)}
         />
       ))}
     </div>
