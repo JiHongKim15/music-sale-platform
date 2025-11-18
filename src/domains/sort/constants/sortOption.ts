@@ -13,13 +13,7 @@ export interface Product {
   status: string;
 }
 
-export type SortOptionValue =
-  | "latest"
-  | "price_low"
-  | "price_high"
-  | "distance"
-  | "likes"
-  | "views";
+export type SortOptionValue = "latest" | "priceLow" | "priceHigh" | "distance" | "likes" | "views";
 
 export interface SortOption {
   label: string;
@@ -28,8 +22,8 @@ export interface SortOption {
 
 export const SORT_OPTIONS: SortOption[] = [
   { label: "최신순", value: "latest" },
-  { label: "낮은 가격순", value: "price_low" },
-  { label: "높은 가격순", value: "price_high" },
+  { label: "낮은 가격순", value: "priceLow" },
+  { label: "높은 가격순", value: "priceHigh" },
   { label: "가까운순", value: "distance" }, //지역 정렬은 아직 구현 할 수 없어서 "최신순"과 동일하게 둠.
   { label: "좋아요순", value: "likes" },
   { label: "조회순", value: "views" },
