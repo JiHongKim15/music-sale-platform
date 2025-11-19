@@ -1,5 +1,9 @@
 import { useState, useMemo } from "react";
-import { SortOptionValue, Product, SORT_OPTIONS } from "../constants/sortOption";
+import {
+  SortOptionValue,
+  Product,
+  SORT_OPTIONS,
+} from "../constants/sortOption";
 
 export function useSort(data: Product[]) {
   const [sortOption, setSortOption] = useState<SortOptionValue>("latest");
@@ -23,9 +27,9 @@ export function useSort(data: Product[]) {
 
     const comparator = (a: Product, b: Product): number => {
       switch (sortOption) {
-        case "price_low":
+        case "priceLow":
           return a.price - b.price || secondarySort(a, b);
-        case "price_high":
+        case "priceHigh":
           return b.price - a.price || secondarySort(a, b);
         case "likes":
           if (b.wishlistCount !== a.wishlistCount) {
@@ -49,7 +53,9 @@ export function useSort(data: Product[]) {
     return sortableData.sort(comparator);
   }, [data, sortOption]);
 
-  const currentLabel = SORT_OPTIONS.find((opt) => opt.value === sortOption)?.label;
+  const currentLabel = SORT_OPTIONS.find(
+    (opt) => opt.value === sortOption
+  )?.label;
 
   return {
     sortOption,
