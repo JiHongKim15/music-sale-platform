@@ -13,14 +13,20 @@ export interface Product {
   status: string;
 }
 
-export type SortOptionValue = "latest" | "priceLow" | "priceHigh" | "distance" | "likes" | "views";
+export type SortOptionValue =
+  | "latest"
+  | "priceLow"
+  | "priceHigh"
+  | "distance"
+  | "likes"
+  | "views";
 
 export interface SortOption {
   label: string;
   value: SortOptionValue;
 }
 
-export const SORT_OPTIONS: SortOption[] = [
+export const PRODUCT_SORT_OPTIONS: SortOption[] = [
   { label: "최신순", value: "latest" },
   { label: "낮은 가격순", value: "priceLow" },
   { label: "높은 가격순", value: "priceHigh" },

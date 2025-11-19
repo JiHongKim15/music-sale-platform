@@ -1,5 +1,8 @@
 import { X } from "lucide-react";
-import { SORT_OPTIONS, SortOptionValue } from "../constants/sortOption";
+import {
+  PRODUCT_SORT_OPTIONS,
+  SortOptionValue,
+} from "../constants/productSortOptions";
 import { BottomSheet } from "@/shares/overlays/BottomSheet";
 
 type SortBottomSheetProps = {
@@ -25,7 +28,7 @@ export default function SortBottomSheet({
       </div>
 
       <div className="flex flex-col gap-2">
-        {SORT_OPTIONS.map((opt) => (
+        {PRODUCT_SORT_OPTIONS.map((opt) => (
           <button
             key={opt.value}
             onClick={() => onSelect(opt.value)}

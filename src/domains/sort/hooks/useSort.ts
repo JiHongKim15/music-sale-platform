@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import {
   SortOptionValue,
   Product,
-  SORT_OPTIONS,
-} from "../constants/sortOption";
+  PRODUCT_SORT_OPTIONS,
+} from "../constants/productSortOptions";
 
 export function useSort(data: Product[]) {
   const [sortOption, setSortOption] = useState<SortOptionValue>("latest");
@@ -53,7 +53,7 @@ export function useSort(data: Product[]) {
     return sortableData.sort(comparator);
   }, [data, sortOption]);
 
-  const currentLabel = SORT_OPTIONS.find(
+  const currentLabel = PRODUCT_SORT_OPTIONS.find(
     (opt) => opt.value === sortOption
   )?.label;
 

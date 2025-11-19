@@ -5,12 +5,19 @@ import ProductListSkeleton from "@/domains/products/components/ProductListSkelet
 import { useSort } from "@/domains/sort/hooks/useSort";
 import SortButton from "@/domains/sort/components/SortButton";
 import SortBottomSheet from "@/domains/sort/components/SortBottomSheet";
-import { Product } from "@/domains/sort/constants/sortOption";
+import { Product } from "@/domains/sort/constants/productSortOptions";
 export function HomePage() {
   const productsData: Product[] = mockProducts;
 
-  const { isSortOpen, openSort, closeSort, selectSort, sortedData, sortOption, currentLabel } =
-    useSort(productsData);
+  const {
+    isSortOpen,
+    openSort,
+    closeSort,
+    selectSort,
+    sortedData,
+    sortOption,
+    currentLabel,
+  } = useSort(productsData);
 
   return (
     <div className="pt-4">
