@@ -6,16 +6,11 @@ import Footer from "@/shares/layouts/Footer";
 export function Layout() {
   return (
     <div className="flex justify-center w-full min-h-screen bg-gray-50 overflow-x-auto">
-      {/* 중앙 고정된 박스 */}
       <div className="relative flex flex-col w-[672px] max-w-[672px] min-w-[260px] min-h-screen shadow-[0_4px_20px_rgba(0,0,0,0.1)] bg-white">
-        {/* 헤더 */}
         <Header />
-
-        {/* 메인 */}
         <main className="flex-1 overflow-y-auto px-4 pt-[120px] pb-[90px] animate-[fadeIn_0.3s_ease-out]">
           <Outlet />
         </main>
-        {/* 푸터 */}
         <Footer />
       </div>
     </div>

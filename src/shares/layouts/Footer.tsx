@@ -2,11 +2,9 @@ import React from "react";
 import { Home, Users, MapPin, MessageCircle, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-//푸터 컴포넌트
 export default function Footer() {
   const navigate = useNavigate();
   const location = useLocation();
-
   const navItems = [
     { icon: <Users size={22} />, path: "/community" },
     { icon: <MapPin size={22} />, path: "/map" },
